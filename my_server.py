@@ -8,7 +8,7 @@ API_KEY = os.getenv("API_KEY")
 
 url = "http://apis.data.go.kr/1471000/FoodNtrCpntDbInfo02/getFoodNtrCpntDbInq02"
 
-mcp = FastMCP("food_mcp_server")
+mcp = FastMCP(name="food_mcp_server", mask_error_details=True)
 korean_names = {
     'NUM': '번호',
     'FOOD_CD': '식품코드',
@@ -205,18 +205,34 @@ korean_names = {
     'UPDATE_DATE': '라이신(mg)',
 }
 
-@mcp.resource("repos://{food}/info")
-def getSearchFood(food: str) -> list:
-    """식품명으로 식품영양성분 정보를 검색한다."""    
-    print(f"서버: 공공데이터포털 API에 '{food}' 검색 요청 중...")
-    params = {
-        'serviceKey': API_KEY, 
-        'pageNo': 1,
-        'numOfRows': 5,
-        'type': 'json', 
-        'FOOD_NM_KR':food,
-        'DB_CLASS_NM': '품목대표'
+@mcp.tool(
+    name= "getSearchFood",
+    tags={"food", "search"},
+    annotations={
+        "title": "Search food nutrition facts",
+        "openWorldHint": True
     }
+)
+def getSearchFood(
+    FOOD_NM_KR: str = '',
+    MAKER_NM: str = '',
+    FOOD_CAT1_NM: str = '',
+    DB_CLASS_NM: str = '품목대표',
+    pageNo: int = 1, 
+    numOfRows: int = 5
+    ) -> list:
+    """식품의약품안전처 식품영양성분DB에서 식품 정보를 검색합니다. 식품명, 업체명, 식품대분류명, 품목대표/상용제품 등을 기준으로 검색할 수 있습니다."""    
+    params = {
+        'serviceKey': "PfD2%2BbYHcC9WsY%2BH5xYpt9Tj39TG%2B3AVSkpfdygTUCxTNEj3mpWXeG5hEa4p7uSwN10Xdy%2BFZIBlvsdKtjTxAQ%3D%3D",
+        'pageNo': pageNo,
+        'numOfRows': numOfRows,
+        'type': 'json', 
+        'FOOD_NM_KR': FOOD_NM_KR,
+        'MAKER_NM': MAKER_NM,
+        'FOOD_CAT1_NM': FOOD_CAT1_NM,
+        'DB_CLASS_NM': DB_CLASS_NM
+    }
+    print(params)
     try:
         response = requests.get(url, params=params)
         response.raise_for_status()
@@ -239,9 +255,8 @@ def getSearchFood(food: str) -> list:
         return []
 
 if __name__ == "__main__":
-    # mcp.run()
     mcp.run(
-        transport="streamable-http", 
-        path='/',
-        port=19861
+    #     transport="streamable-http", 
+    #     path='/',
+    #     port=19861
         )

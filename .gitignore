@@ -182,4 +182,6 @@ pyrightconfig.json
 .LSOverride
 
 client.py
+.gemini/
+fastmcp.json
 # End of https://www.toptal.com/developers/gitignore/api/python,dotenv

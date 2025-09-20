@@ -1,0 +1,35 @@
+name: Docker Image CI
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout Repository
+      uses: actions/checkout@v4
+
+    - name: Create .env file
+      run: |
+        echo "API_KEY=${{ secrets.API_KEY }}" >> .env
+
+    - name: Get current date
+      id: date
+      run: echo "BUILD_DATE=$(date +%s)" >> $GITHUB_ENV
+
+    - name: Build Docker image
+      run: |
+        docker build -t ${{ secrets.DOCKER_NAME }}:${{ env.BUILD_DATE }} .
+    - name: Publish to Docker
+      run: |
+        docker tag ${{ secrets.DOCKER_NAME }}:${{ env.BUILD_DATE }} ${{ secrets.REGI }}:${{ env.BUILD_DATE }}
+    - name: Docker push with retries
+      run: |
+        docker push ${{ secrets.REGI }}:${{ env.BUILD_DATE }}

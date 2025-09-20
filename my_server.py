@@ -223,7 +223,7 @@ def getSearchFood(
     ) -> list:
     """식품의약품안전처 식품영양성분DB에서 식품 정보를 검색합니다. 식품명, 업체명, 식품대분류명, 품목대표/상용제품 등을 기준으로 검색할 수 있습니다."""    
     params = {
-        'serviceKey': "PfD2%2BbYHcC9WsY%2BH5xYpt9Tj39TG%2B3AVSkpfdygTUCxTNEj3mpWXeG5hEa4p7uSwN10Xdy%2BFZIBlvsdKtjTxAQ%3D%3D",
+        'serviceKey': API_KEY,
         'pageNo': pageNo,
         'numOfRows': numOfRows,
         'type': 'json', 
@@ -256,7 +256,7 @@ def getSearchFood(
 
 if __name__ == "__main__":
     mcp.run(
-    #     transport="streamable-http", 
-    #     path='/',
-    #     port=19861
+        transport="streamable-http", 
+        path='/',
+        port=19861
         )

@@ -12,7 +12,7 @@ RUN ls -l
 # 의존성 설치
 RUN pip install --no-cache-dir -r requirements.txt
 
-COPY my_server.py .
+COPY . .
 
 COPY .env .env
 
